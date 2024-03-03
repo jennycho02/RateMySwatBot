@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/basepage.css')}}">
+</head>
+<!-- Page for reviews to be shown with same navbar and body format -->
+<body>
+    <div class="navbar">
+        <!-- Logo on top left for redirection to homepage -->
+        <a href="/"><img src = "{{url_for('static', filename='ratemyswat.svg')}}" width = 100% class="logo"></a>
+        <!-- Search bar item that allows autofill of classes that connects to database -->
+        <form class="search-bar" method="post" onsubmit="return reRoute()">
+            <div class="dropdown">
+                <datalist id = "suggestions">
+                    {% for option in dropdown_classes %}
+                        <option value="{{ option}}">
+                    {% endfor %}
+                </datalist>
+            </div>
+            <!-- Search input that sets width and height for bar -->
+            <input autoComplete="on" id="searchQueryInput" type="text" placeholder="Search by department, course title, professor..." list = "suggestions" name = "course" />
+           <!-- Search button using svg -->
+            <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit">
+                <!-- Changing height and width needs to be done with
+                style width and height as well as the viewbox 
+                -->
+                <svg style="width:28px;height:28px" viewBox="0.75 0.75 20 20"><path fill="#FFFFFF" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+                </svg>
+            </button>
+        </form>
+        <!-- Write a Review button that linkes to Mastodon DM to bot with autofilled template -->
+         <button id="reviewBtn" type="button" onclick="window.open('https://social.cs.swarthmore.edu/share?text=@RateMySwatBot%0ACourse%20Code:%0AFull%20Name%20of%20Professor:%0ASemester%20Taken,%20e.g.%20Fall%202023:%0A%0ARating%201-5,%205%20being%20best%20and%20most%20difficult%0AOverall%20Rating:%0ADifficulty%20Rating:%0A%0APlease%20write%20your%20open-ended%20comment%20here:&visibility=direct','_blank')">Write a Review</button> 
+    </div>
+    <!-- Format for a single review that will be repeated for each review -->
+    <p class = "review_title">{% block title %} {{course_reviews|length}} reviews for {{ course_name }}: {{ course_title }} taught by {{ professor_name }}{% endblock %}</p>
+    {% for review in course_reviews %}
+        <div class="single_review">
+                <p class="review_header">Overall Rating: {{ review.overall_rating }} –––– Difficulty Rating: {{ review.difficulty_rating }}</p>
+                <div class="tags">
+                    <p class="class_title">{{ course_name }}</p>
+                    <p class="prof_name"> {{ professor_name }}</p>
+                    <p class="semester">{{review.semester_taken}}</p>
+                </div>
+            <p class="comment">{{ review.review_content }}</p>
+        </div>
+    {% endfor %}
+    <!-- Routing to new URL for specific course reviews -->
+    <script>
+        function reRoute() {
+            const chosen_class = document.getElementById('searchQueryInput').value;
+            if (chosen_class.length == 0) {
+                chosen_class = " "
+            }
+            window.location.href = '/reviews/' + encodeURIComponent(chosen_class);
+            return false;
+        }
+    </script>
+</body>
+</html>
+
