@@ -4,7 +4,8 @@
 
 **Course**: CPSC091R Social and Crowd Computing - Fall 2023 Under the Supervision of Professor Sukrit Venkatagiri
 
-___
+This project was completed for CS091R (Social Crowd and Computing) under the guidance of Dr. Sukrit Venkatagiri in collaboration with Emmy Stavis and Liv Medeiros-Sakimoto '25. We implemented a online course reviewing system for Swarthmore College that utilizes a Mastodon bot account to receive new reviews from the webite as well as through DMs to the Mastodon account, and post reviews and compile them onto the website in a standardized format.
+
 ## Installation:
 
 1. Install virtualenv:
